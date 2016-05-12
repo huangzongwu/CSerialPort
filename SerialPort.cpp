@@ -33,7 +33,7 @@ CSerialPort::CSerialPort()
 	m_hComm = NULL;
 
 	// initialize overlapped structure members to zero
-	///³õÊ¼»¯Òì²½½á¹¹Ìå
+	///åˆå§‹åŒ–å¼‚æ­¥ç»“æ„ä½“
 	m_ov.Offset = 0;
 	m_ov.OffsetHigh = 0;
 
@@ -80,7 +80,7 @@ CSerialPort::~CSerialPort()
 
 //
 // Initialize the port. This can be port 1 to MaxSerialPortNum.
-///³õÊ¼»¯´®¿Ú¡£Ö»ÄÜÊÇ1-MaxSerialPortNum
+///åˆå§‹åŒ–ä¸²å£ã€‚åªèƒ½æ˜¯1-MaxSerialPortNum
 //
 //parity:
 //  n=none
@@ -139,14 +139,14 @@ BOOL CSerialPort::InitPort(CWnd* pPortOwner,	// the owner (CWnd) of the port (re
 		m_hShutdownEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 
 	// initialize the event objects
-	///ÊÂ¼şÊı×é³õÊ¼»¯£¬Éè¶¨ÓÅÏÈ¼¶±ğ
+	///äº‹ä»¶æ•°ç»„åˆå§‹åŒ–ï¼Œè®¾å®šä¼˜å…ˆçº§åˆ«
 	m_hEventArray[0] = m_hShutdownEvent;	// highest priority
 	m_hEventArray[1] = m_hWriteEvent;
 	m_hEventArray[2] = m_ov.hEvent;
 	
 
 	// initialize critical section
-	///³õÊ¼»¯ÁÙ½ç×ÊÔ´
+	///åˆå§‹åŒ–ä¸´ç•Œèµ„æº
 	InitializeCriticalSection(&m_csCommunicationSync);
 	
 	// set buffersize for writing and save the owner
@@ -167,16 +167,16 @@ BOOL CSerialPort::InitPort(CWnd* pPortOwner,	// the owner (CWnd) of the port (re
 
 	
 	/*
-	¶à¸öÏß³Ì²Ù×÷ÏàÍ¬µÄÊı¾İÊ±£¬Ò»°ãÊÇĞèÒª°´Ë³Ğò·ÃÎÊµÄ£¬·ñÔò»áÒıµ¼Êı¾İ´íÂÒ£¬
-	ÎŞ·¨¿ØÖÆÊı¾İ£¬±ä³ÉËæ»ú±äÁ¿¡£Îª½â¾öÕâ¸öÎÊÌâ£¬¾ÍĞèÒªÒıÈë»¥³â±äÁ¿£¬ÈÃÃ¿
-	¸öÏß³Ì¶¼°´Ë³ĞòµØ·ÃÎÊ±äÁ¿¡£ÕâÑù¾ÍĞèÒªÊ¹ÓÃEnterCriticalSectionºÍ
-	LeaveCriticalSectionº¯Êı¡£
+	å¤šä¸ªçº¿ç¨‹æ“ä½œç›¸åŒçš„æ•°æ®æ—¶ï¼Œä¸€èˆ¬æ˜¯éœ€è¦æŒ‰é¡ºåºè®¿é—®çš„ï¼Œå¦åˆ™ä¼šå¼•å¯¼æ•°æ®é”™ä¹±ï¼Œ
+	æ— æ³•æ§åˆ¶æ•°æ®ï¼Œå˜æˆéšæœºå˜é‡ã€‚ä¸ºè§£å†³è¿™ä¸ªé—®é¢˜ï¼Œå°±éœ€è¦å¼•å…¥äº’æ–¥å˜é‡ï¼Œè®©æ¯
+	ä¸ªçº¿ç¨‹éƒ½æŒ‰é¡ºåºåœ°è®¿é—®å˜é‡ã€‚è¿™æ ·å°±éœ€è¦ä½¿ç”¨EnterCriticalSectionå’Œ
+	LeaveCriticalSectionå‡½æ•°ã€‚
 	*/
 	// now it critical!
 	EnterCriticalSection(&m_csCommunicationSync);
 
 	// if the port is already opened: close it
-	///´®¿ÚÒÑ´ò¿ª¾Í¹Øµô
+	///ä¸²å£å·²æ‰“å¼€å°±å…³æ‰
 	if (m_hComm != NULL)
 	{
 		CloseHandle(m_hComm);
@@ -184,7 +184,7 @@ BOOL CSerialPort::InitPort(CWnd* pPortOwner,	// the owner (CWnd) of the port (re
 	}
 
 	// prepare port strings
-	sprintf(szPort, "\\\\.\\COM%d", portnr);///¿ÉÒÔÏÔÊ¾COM10ÒÔÉÏ¶Ë¿Ú//add by itas109 2014-01-09
+	sprintf(szPort, "\\\\.\\COM%d", portnr);///å¯ä»¥æ˜¾ç¤ºCOM10ä»¥ä¸Šç«¯å£//add by itas109 2014-01-09
 
 	// stop is index 0 = 1 1=1.5 2=2
 	int mystop;
@@ -200,8 +200,8 @@ BOOL CSerialPort::InitPort(CWnd* pPortOwner,	// the owner (CWnd) of the port (re
 		case 2:
 			mystop = TWOSTOPBITS;
 			break;
-			//Ôö¼ÓÄ¬ÈÏÇé¿ö£¬ÒòÎªstopbits=1.5Ê±£¬SetCommState»á±¨´í¡£
-			//Ò»°ãµÄµçÄÔ´®¿Ú²»Ö§³Ö1.5Í£Ö¹Î»£¬Õâ¸ö1.5Í£Ö¹Î»ËÆºõÓÃÔÚºìÍâ´«ÊäÉÏµÄ¡£
+			//å¢åŠ é»˜è®¤æƒ…å†µï¼Œå› ä¸ºstopbits=1.5æ—¶ï¼ŒSetCommStateä¼šæŠ¥é”™ã€‚
+			//ä¸€èˆ¬çš„ç”µè„‘ä¸²å£ä¸æ”¯æŒ1.5åœæ­¢ä½ï¼Œè¿™ä¸ª1.5åœæ­¢ä½ä¼¼ä¹ç”¨åœ¨çº¢å¤–ä¼ è¾“ä¸Šçš„ã€‚
 			//by itas109 20160506
 		default:
 			mystop = ONESTOPBIT;
@@ -226,7 +226,7 @@ BOOL CSerialPort::InitPort(CWnd* pPortOwner,	// the owner (CWnd) of the port (re
 		case 'S':
 			myparity = 4;
 			break;
-		//Ôö¼ÓÄ¬ÈÏÇé¿ö¡£
+		//å¢åŠ é»˜è®¤æƒ…å†µã€‚
 		//by itas109 20160506
 		default:
 			myparity = 0;
@@ -236,15 +236,15 @@ BOOL CSerialPort::InitPort(CWnd* pPortOwner,	// the owner (CWnd) of the port (re
 
 	// get a handle to the port
 	/*
-	Í¨ĞÅ³ÌĞòÔÚCreateFile´¦Ö¸¶¨´®¿ÚÉè±¸¼°Ïà¹ØµÄ²Ù×÷ÊôĞÔ£¬ÔÙ·µ»ØÒ»¸ö¾ä±ú£¬
-	¸Ã¾ä±ú½«±»ÓÃÓÚºóĞøµÄÍ¨ĞÅ²Ù×÷£¬²¢¹á´©Õû¸öÍ¨ĞÅ¹ı³Ì´®¿Ú´ò¿ªºó£¬ÆäÊôĞÔ
-	±»ÉèÖÃÎªÄ¬ÈÏÖµ£¬¸ù¾İ¾ßÌåĞèÒª£¬Í¨¹ıµ÷ÓÃGetCommState(hComm,&&dcb)¶ÁÈ¡
-	µ±Ç°´®¿ÚÉè±¸¿ØÖÆ¿éDCBÉèÖÃ£¬ĞŞ¸ÄºóÍ¨¹ıSetCommState(hComm,&&dcb)½«ÆäĞ´
-	Èë¡£ÔËÓÃReadFile()ÓëWriteFile()ÕâÁ½¸öAPIº¯ÊıÊµÏÖ´®¿Ú¶ÁĞ´²Ù×÷£¬ÈôÎªÒì
-	²½Í¨ĞÅ·½Ê½£¬Á½º¯ÊıÖĞ×îºóÒ»¸ö²ÎÊıÎªÖ¸ÏòOVERLAPPED½á¹¹µÄ·Ç¿ÕÖ¸Õë£¬ÔÚ¶Á
-	Ğ´º¯Êı·µ»ØÖµÎªFALSEµÄÇé¿öÏÂ£¬µ÷ÓÃGetLastError()º¯Êı£¬·µ»ØÖµÎªERROR_IO_PENDING£¬
-	±íÃ÷I/O²Ù×÷Ğü¹Ò£¬¼´²Ù×÷×ªÈëºóÌ¨¼ÌĞøÖ´ĞĞ¡£´ËÊ±£¬¿ÉÒÔÓÃWaitForSingleObject()
-	À´µÈ´ı½áÊøĞÅºÅ²¢ÉèÖÃ×î³¤µÈ´ıÊ±¼ä
+	é€šä¿¡ç¨‹åºåœ¨CreateFileå¤„æŒ‡å®šä¸²å£è®¾å¤‡åŠç›¸å…³çš„æ“ä½œå±æ€§ï¼Œå†è¿”å›ä¸€ä¸ªå¥æŸ„ï¼Œ
+	è¯¥å¥æŸ„å°†è¢«ç”¨äºåç»­çš„é€šä¿¡æ“ä½œï¼Œå¹¶è´¯ç©¿æ•´ä¸ªé€šä¿¡è¿‡ç¨‹ä¸²å£æ‰“å¼€åï¼Œå…¶å±æ€§
+	è¢«è®¾ç½®ä¸ºé»˜è®¤å€¼ï¼Œæ ¹æ®å…·ä½“éœ€è¦ï¼Œé€šè¿‡è°ƒç”¨GetCommState(hComm,&&dcb)è¯»å–
+	å½“å‰ä¸²å£è®¾å¤‡æ§åˆ¶å—DCBè®¾ç½®ï¼Œä¿®æ”¹åé€šè¿‡SetCommState(hComm,&&dcb)å°†å…¶å†™
+	å…¥ã€‚è¿ç”¨ReadFile()ä¸WriteFile()è¿™ä¸¤ä¸ªAPIå‡½æ•°å®ç°ä¸²å£è¯»å†™æ“ä½œï¼Œè‹¥ä¸ºå¼‚
+	æ­¥é€šä¿¡æ–¹å¼ï¼Œä¸¤å‡½æ•°ä¸­æœ€åä¸€ä¸ªå‚æ•°ä¸ºæŒ‡å‘OVERLAPPEDç»“æ„çš„éç©ºæŒ‡é’ˆï¼Œåœ¨è¯»
+	å†™å‡½æ•°è¿”å›å€¼ä¸ºFALSEçš„æƒ…å†µä¸‹ï¼Œè°ƒç”¨GetLastError()å‡½æ•°ï¼Œè¿”å›å€¼ä¸ºERROR_IO_PENDINGï¼Œ
+	è¡¨æ˜I/Oæ“ä½œæ‚¬æŒ‚ï¼Œå³æ“ä½œè½¬å…¥åå°ç»§ç»­æ‰§è¡Œã€‚æ­¤æ—¶ï¼Œå¯ä»¥ç”¨WaitForSingleObject()
+	æ¥ç­‰å¾…ç»“æŸä¿¡å·å¹¶è®¾ç½®æœ€é•¿ç­‰å¾…æ—¶é—´
 	*/
 	m_hComm = CreateFile(szPort,						// communication port string (COMX)
 						 GENERIC_READ | GENERIC_WRITE,	// read/write types
@@ -254,7 +254,7 @@ BOOL CSerialPort::InitPort(CWnd* pPortOwner,	// the owner (CWnd) of the port (re
 						 FILE_FLAG_OVERLAPPED,			// Async I/O
 						 0);							// template must be 0 for comm devices
 
-	///´´½¨Ê§°Ü
+	///åˆ›å»ºå¤±è´¥
 	if (m_hComm == INVALID_HANDLE_VALUE)
 	{
 		// port not found
@@ -265,7 +265,7 @@ BOOL CSerialPort::InitPort(CWnd* pPortOwner,	// the owner (CWnd) of the port (re
 	}
 
 	// set the timeout values
-	///ÉèÖÃ³¬Ê±
+	///è®¾ç½®è¶…æ—¶
 	m_CommTimeouts.ReadIntervalTimeout		 = ReadIntervalTimeout * 1000;
 	m_CommTimeouts.ReadTotalTimeoutMultiplier  = ReadTotalTimeoutMultiplier * 1000;
 	m_CommTimeouts.ReadTotalTimeoutConstant	= ReadTotalTimeoutConstant * 1000;
@@ -273,25 +273,25 @@ BOOL CSerialPort::InitPort(CWnd* pPortOwner,	// the owner (CWnd) of the port (re
 	m_CommTimeouts.WriteTotalTimeoutConstant   = WriteTotalTimeoutConstant * 1000;
 
 	// configure
-	///ÅäÖÃ
-	///·Ö±ğµ÷ÓÃWindows APIÉèÖÃ´®¿Ú²ÎÊı
-	if (SetCommTimeouts(m_hComm, &m_CommTimeouts))///ÉèÖÃ³¬Ê±
+	///é…ç½®
+	///åˆ†åˆ«è°ƒç”¨Windows APIè®¾ç½®ä¸²å£å‚æ•°
+	if (SetCommTimeouts(m_hComm, &m_CommTimeouts))///è®¾ç½®è¶…æ—¶
 	{						   
 		/*
-		Èô¶Ô¶Ë¿ÚÊı¾İµÄÏìÓ¦Ê±¼äÒªÇó½ÏÑÏ¸ñ£¬¿É²ÉÓÃÊÂ¼şÇı¶¯·½Ê½¡£
-		ÊÂ¼şÇı¶¯·½Ê½Í¨¹ıÉèÖÃÊÂ¼şÍ¨Öª£¬µ±ËùÏ£ÍûµÄÊÂ¼ş·¢ÉúÊ±£¬Windows
-		·¢³ö¸ÃÊÂ¼şÒÑ·¢ÉúµÄÍ¨Öª£¬ÕâÓëDOS»·¾³ÏÂµÄÖĞ¶Ï·½Ê½ºÜÏàËÆ¡£Windows
-	    ¶¨ÒåÁË9ÖÖ´®¿ÚÍ¨ĞÅÊÂ¼ş£¬½Ï³£ÓÃµÄÓĞÒÔÏÂÈıÖÖ£º
-			EV_RXCHAR:½ÓÊÕµ½Ò»¸ö×Ö½Ú£¬²¢·ÅÈëÊäÈë»º³åÇø£»
-			EV_TXEMPTY:Êä³ö»º³åÇøÖĞµÄ×îºóÒ»¸ö×Ö·û£¬·¢ËÍ³öÈ¥£»
-			EV_RXFLAG:½ÓÊÕµ½ÊÂ¼ş×Ö·û(DCB½á¹¹ÖĞEvtChar³ÉÔ±)£¬·ÅÈëÊäÈë»º³åÇø
-		ÔÚÓÃSetCommMask()Ö¸¶¨ÁËÓĞÓÃµÄÊÂ¼şºó£¬Ó¦ÓÃ³ÌĞò¿Éµ÷ÓÃWaitCommEvent()À´µÈ´ıÊÂ
-		¼şµÄ·¢Éú¡£SetCommMask(hComm,0)¿ÉÊ¹WaitCommEvent()ÖĞÖ¹
+		è‹¥å¯¹ç«¯å£æ•°æ®çš„å“åº”æ—¶é—´è¦æ±‚è¾ƒä¸¥æ ¼ï¼Œå¯é‡‡ç”¨äº‹ä»¶é©±åŠ¨æ–¹å¼ã€‚
+		äº‹ä»¶é©±åŠ¨æ–¹å¼é€šè¿‡è®¾ç½®äº‹ä»¶é€šçŸ¥ï¼Œå½“æ‰€å¸Œæœ›çš„äº‹ä»¶å‘ç”Ÿæ—¶ï¼ŒWindows
+		å‘å‡ºè¯¥äº‹ä»¶å·²å‘ç”Ÿçš„é€šçŸ¥ï¼Œè¿™ä¸DOSç¯å¢ƒä¸‹çš„ä¸­æ–­æ–¹å¼å¾ˆç›¸ä¼¼ã€‚Windows
+	    å®šä¹‰äº†9ç§ä¸²å£é€šä¿¡äº‹ä»¶ï¼Œè¾ƒå¸¸ç”¨çš„æœ‰ä»¥ä¸‹ä¸‰ç§ï¼š
+			EV_RXCHAR:æ¥æ”¶åˆ°ä¸€ä¸ªå­—èŠ‚ï¼Œå¹¶æ”¾å…¥è¾“å…¥ç¼“å†²åŒºï¼›
+			EV_TXEMPTY:è¾“å‡ºç¼“å†²åŒºä¸­çš„æœ€åä¸€ä¸ªå­—ç¬¦ï¼Œå‘é€å‡ºå»ï¼›
+			EV_RXFLAG:æ¥æ”¶åˆ°äº‹ä»¶å­—ç¬¦(DCBç»“æ„ä¸­EvtCharæˆå‘˜)ï¼Œæ”¾å…¥è¾“å…¥ç¼“å†²åŒº
+		åœ¨ç”¨SetCommMask()æŒ‡å®šäº†æœ‰ç”¨çš„äº‹ä»¶åï¼Œåº”ç”¨ç¨‹åºå¯è°ƒç”¨WaitCommEvent()æ¥ç­‰å¾…äº‹
+		ä»¶çš„å‘ç”Ÿã€‚SetCommMask(hComm,0)å¯ä½¿WaitCommEvent()ä¸­æ­¢
 		*/
-		if (SetCommMask(m_hComm, dwCommEvents))///ÉèÖÃÍ¨ĞÅÊÂ¼ş
+		if (SetCommMask(m_hComm, dwCommEvents))///è®¾ç½®é€šä¿¡äº‹ä»¶
 		{
 			
-			if (GetCommState(m_hComm, &m_dcb))///»ñÈ¡µ±Ç°DCB²ÎÊı
+			if (GetCommState(m_hComm, &m_dcb))///è·å–å½“å‰DCBå‚æ•°
 			{
 				m_dcb.EvtChar = 'q';
 				m_dcb.fRtsControl = RTS_CONTROL_ENABLE;		// set RTS bit high!
@@ -300,9 +300,9 @@ BOOL CSerialPort::InitPort(CWnd* pPortOwner,	// the owner (CWnd) of the port (re
 				m_dcb.ByteSize = databits;
 				m_dcb.StopBits = mystop;
 
-				//if (BuildCommDCB(szBaud &m_dcb))///ÌîĞ´DCB½á¹¹
+				//if (BuildCommDCB(szBaud &m_dcb))///å¡«å†™DCBç»“æ„
 				//{
-					if (SetCommState(m_hComm, &m_dcb))///ÅäÖÃDCB
+					if (SetCommState(m_hComm, &m_dcb))///é…ç½®DCB
 						; // normal operation... continue
 					else
 						ProcessErrorMessage("SetCommState()");
@@ -323,11 +323,11 @@ BOOL CSerialPort::InitPort(CWnd* pPortOwner,	// the owner (CWnd) of the port (re
 	delete [] szBaud;
 
 	// flush the port
-	///ÖÕÖ¹¶ÁĞ´²¢Çå¿Õ½ÓÊÕºÍ·¢ËÍ
+	///ç»ˆæ­¢è¯»å†™å¹¶æ¸…ç©ºæ¥æ”¶å’Œå‘é€
 	PurgeComm(m_hComm, PURGE_RXCLEAR | PURGE_TXCLEAR | PURGE_RXABORT | PURGE_TXABORT);
 
 	// release critical section
-	///ÊÍ·ÅÁÙ½ç×ÊÔ´
+	///é‡Šæ”¾ä¸´ç•Œèµ„æº
 	LeaveCriticalSection(&m_csCommunicationSync);
 
 	//TRACE("Initialisation for communicationport %d completed.\nUse Startmonitor to communicate.\n", portnr);
@@ -337,9 +337,9 @@ BOOL CSerialPort::InitPort(CWnd* pPortOwner,	// the owner (CWnd) of the port (re
 
 //
 //  The CommThread Function.
-///Ïß³Ìº¯Êı
-///¼àÊÓÏß³ÌµÄ´óÖÂÁ÷³Ì£º
-///¼ì²é´®¿Ú-->½øÈëÑ­»·{WaitCommEvent(²»×èÈûÑ¯ÎÊ)Ñ¯ÎÊÊÂ¼ş-->Èç¹ûÓĞÊÂ¼şÀ´µ½-->µ½ÏàÓ¦´¦Àí(¹Ø±Õ\¶Á\Ğ´)}
+///çº¿ç¨‹å‡½æ•°
+///ç›‘è§†çº¿ç¨‹çš„å¤§è‡´æµç¨‹ï¼š
+///æ£€æŸ¥ä¸²å£-->è¿›å…¥å¾ªç¯{WaitCommEvent(ä¸é˜»å¡è¯¢é—®)è¯¢é—®äº‹ä»¶-->å¦‚æœæœ‰äº‹ä»¶æ¥åˆ°-->åˆ°ç›¸åº”å¤„ç†(å…³é—­\è¯»\å†™)}
 //
 DWORD WINAPI CSerialPort::CommThread(LPVOID pParam)
 {
@@ -349,7 +349,7 @@ DWORD WINAPI CSerialPort::CommThread(LPVOID pParam)
 	
 	// Set the status variable in the dialog class to
 	// TRUE to indicate the thread is running.
-	///TRUE±íÊ¾Ïß³ÌÕıÔÚÔËĞĞ
+	///TRUEè¡¨ç¤ºçº¿ç¨‹æ­£åœ¨è¿è¡Œ
 	port->m_bThreadAlive = TRUE;	
 		
 	// Misc. variables
@@ -361,12 +361,12 @@ DWORD WINAPI CSerialPort::CommThread(LPVOID pParam)
 	BOOL  bResult = TRUE;
 		
 	// Clear comm buffers at startup
-	///¿ªÊ¼Ê±Çå³ı´®¿Ú»º³å
+	///å¼€å§‹æ—¶æ¸…é™¤ä¸²å£ç¼“å†²
 	if (port->m_hComm)		// check if the port is opened
 		PurgeComm(port->m_hComm, PURGE_RXCLEAR | PURGE_TXCLEAR | PURGE_RXABORT | PURGE_TXABORT);
 
 	// begin forever loop.  This loop will run as long as the thread is alive.
-	///Ö»ÒªÏß³Ì´æÔÚ¾Í²»¶Ï¶ÁÈ¡Êı¾İ
+	///åªè¦çº¿ç¨‹å­˜åœ¨å°±ä¸æ–­è¯»å–æ•°æ®
 	for (;;) 
 	{ 
 
@@ -382,37 +382,37 @@ DWORD WINAPI CSerialPort::CommThread(LPVOID pParam)
 		// we do this for each port!
 
 		/*
-		WaitCommEventº¯ÊıµÚ3¸ö²ÎÊı1pOverlapped¿ÉÒÔÊÇÒ»¸öOVERLAPPED½á¹¹µÄ±äÁ¿Ö¸Õë
-		£¬Ò²¿ÉÒÔÊÇNULL£¬µ±ÓÃNULLÊ±£¬±íÊ¾¸Ãº¯ÊıÊÇÍ¬²½µÄ£¬·ñÔò±íÊ¾¸Ãº¯ÊıÊÇÒì²½µÄ¡£
-		µ÷ÓÃWaitCommEventÊ±£¬Èç¹ûÒì²½²Ù×÷²»ÄÜÁ¢¼´Íê³É£¬»áÁ¢¼´·µ»ØFALSE£¬ÏµÍ³ÔÚ
-		WaitCommEvent·µ»ØÇ°½«OVERLAPPED½á¹¹³ÉÔ±hEventÉèÎªÎŞĞÅºÅ×´Ì¬£¬µÈµ½²úÉúÍ¨ĞÅ
-		ÊÂ¼şÊ±£¬ÏµÍ³½«ÆäÖÃÓĞĞÅºÅ
+		WaitCommEventå‡½æ•°ç¬¬3ä¸ªå‚æ•°1pOverlappedå¯ä»¥æ˜¯ä¸€ä¸ªOVERLAPPEDç»“æ„çš„å˜é‡æŒ‡é’ˆ
+		ï¼Œä¹Ÿå¯ä»¥æ˜¯NULLï¼Œå½“ç”¨NULLæ—¶ï¼Œè¡¨ç¤ºè¯¥å‡½æ•°æ˜¯åŒæ­¥çš„ï¼Œå¦åˆ™è¡¨ç¤ºè¯¥å‡½æ•°æ˜¯å¼‚æ­¥çš„ã€‚
+		è°ƒç”¨WaitCommEventæ—¶ï¼Œå¦‚æœå¼‚æ­¥æ“ä½œä¸èƒ½ç«‹å³å®Œæˆï¼Œä¼šç«‹å³è¿”å›FALSEï¼Œç³»ç»Ÿåœ¨
+		WaitCommEventè¿”å›å‰å°†OVERLAPPEDç»“æ„æˆå‘˜hEventè®¾ä¸ºæ— ä¿¡å·çŠ¶æ€ï¼Œç­‰åˆ°äº§ç”Ÿé€šä¿¡
+		äº‹ä»¶æ—¶ï¼Œç³»ç»Ÿå°†å…¶ç½®æœ‰ä¿¡å·
 		*/
 
-		bResult = WaitCommEvent(port->m_hComm, &Event, &port->m_ov);///±íÊ¾¸Ãº¯ÊıÊÇÒì²½µÄ
+		bResult = WaitCommEvent(port->m_hComm, &Event, &port->m_ov);///è¡¨ç¤ºè¯¥å‡½æ•°æ˜¯å¼‚æ­¥çš„
 		
 		if (!bResult)  
 		{ 
 			// If WaitCommEvent() returns FALSE, process the last error to determin
 			// the reason..
-			///Èç¹ûWaitCommEvent·µ»ØErrorÎªFALSE£¬Ôò²éÑ¯´íÎóĞÅÏ¢
+			///å¦‚æœWaitCommEventè¿”å›Errorä¸ºFALSEï¼Œåˆ™æŸ¥è¯¢é”™è¯¯ä¿¡æ¯
 			switch (dwError = GetLastError()) 
 			{ 
-			case ERROR_IO_PENDING: 	///Õı³£Çé¿ö£¬Ã»ÓĞ×Ö·û¿É¶Á
+			case ERROR_IO_PENDING: 	///æ­£å¸¸æƒ…å†µï¼Œæ²¡æœ‰å­—ç¬¦å¯è¯»
 				{ 
 					// This is a normal return value if there are no bytes
 					// to read at the port.
 					// Do nothing and continue
 					break;
 				}
-			case 87:///ÏµÍ³´íÎó
+			case 87:///ç³»ç»Ÿé”™è¯¯
 				{
 					// Under Windows NT, this value is returned for some reason.
 					// I have not investigated why, but it is also a valid reply
 					// Also do nothing and continue.
 					break;
 				}
-			default:///·¢ÉúÆäËû´íÎó£¬ÆäÖĞÓĞ´®¿Ú¶ÁĞ´ÖĞ¶Ï¿ª´®¿ÚÁ¬½ÓµÄ´íÎó
+			default:///å‘ç”Ÿå…¶ä»–é”™è¯¯ï¼Œå…¶ä¸­æœ‰ä¸²å£è¯»å†™ä¸­æ–­å¼€ä¸²å£è¿æ¥çš„é”™è¯¯
 				{
 					// All other error codes indicate a serious error has
 					// occured.  Process this error.
@@ -421,7 +421,7 @@ DWORD WINAPI CSerialPort::CommThread(LPVOID pParam)
 				}
 			}
 		}
-		else	///WaitCommEvent()ÄÜÕıÈ··µ»Ø
+		else	///WaitCommEvent()èƒ½æ­£ç¡®è¿”å›
 		{
 			// If WaitCommEvent() returns TRUE, check to be sure there are
 			// actually bytes in the buffer to read.  
@@ -459,14 +459,14 @@ DWORD WINAPI CSerialPort::CommThread(LPVOID pParam)
 				continue;
 		}	// end if bResult
 
-		///Ö÷µÈ´ıº¯Êı£¬»á×èÈûÏß³Ì
+		///ä¸»ç­‰å¾…å‡½æ•°ï¼Œä¼šé˜»å¡çº¿ç¨‹
 		// Main wait function.  This function will normally block the thread
 		// until one of nine events occur that require action.
-		///µÈ´ı3¸öÊÂ¼ş£º¹Ø¶Ï/¶Á/Ğ´£¬ÓĞÒ»¸öÊÂ¼ş·¢Éú¾Í·µ»Ø
-		Event = WaitForMultipleObjects(3, ///3¸öÊÂ¼ş
-			port->m_hEventArray, ///ÊÂ¼şÊı×é
-			FALSE, ///ÓĞÒ»¸öÊÂ¼ş·¢Éú¾Í·µ»Ø
-			INFINITE);///³¬Ê±Ê±¼ä
+		///ç­‰å¾…3ä¸ªäº‹ä»¶ï¼šå…³æ–­/è¯»/å†™ï¼Œæœ‰ä¸€ä¸ªäº‹ä»¶å‘ç”Ÿå°±è¿”å›
+		Event = WaitForMultipleObjects(3, ///3ä¸ªäº‹ä»¶
+			port->m_hEventArray, ///äº‹ä»¶æ•°ç»„
+			FALSE, ///æœ‰ä¸€ä¸ªäº‹ä»¶å‘ç”Ÿå°±è¿”å›
+			INFINITE);///è¶…æ—¶æ—¶é—´
 
 		switch (Event)
 		{
@@ -474,7 +474,7 @@ DWORD WINAPI CSerialPort::CommThread(LPVOID pParam)
 			{
 				// Shutdown event.  This is event zero so it will be
 				// the higest priority and be serviced first.
-				///¹Ø¶ÏÊÂ¼ş£¬¹Ø±Õ´®¿Ú
+				///å…³æ–­äº‹ä»¶ï¼Œå…³é—­ä¸²å£
 				CloseHandle(port->m_hComm);
 				port->m_hComm=NULL;
 			 	port->m_bThreadAlive = FALSE;
@@ -485,26 +485,26 @@ DWORD WINAPI CSerialPort::CommThread(LPVOID pParam)
 
 				break;
 			}
-		case 2:	// read event ½«¶¨ÒåµÄ¸÷ÖÖÏûÏ¢·¢ËÍ³öÈ¥
+		case 2:	// read event å°†å®šä¹‰çš„å„ç§æ¶ˆæ¯å‘é€å‡ºå»
 			{
 				GetCommMask(port->m_hComm, &CommEvent);
-				if (CommEvent & EV_RXCHAR) //½ÓÊÕµ½×Ö·û£¬²¢ÖÃÓÚÊäÈë»º³åÇøÖĞ 
+				if (CommEvent & EV_RXCHAR) //æ¥æ”¶åˆ°å­—ç¬¦ï¼Œå¹¶ç½®äºè¾“å…¥ç¼“å†²åŒºä¸­ 
 					ReceiveChar(port);
 				
-				if (CommEvent & EV_CTS) //CTSĞÅºÅ×´Ì¬·¢Éú±ä»¯
+				if (CommEvent & EV_CTS) //CTSä¿¡å·çŠ¶æ€å‘ç”Ÿå˜åŒ–
 					::SendMessage(port->m_pOwner->m_hWnd, WM_COMM_CTS_DETECTED, (WPARAM) 0, (LPARAM) port->m_nPortNr);
-				if (CommEvent & EV_RXFLAG) //½ÓÊÕµ½ÊÂ¼ş×Ö·û£¬²¢ÖÃÓÚÊäÈë»º³åÇøÖĞ 
+				if (CommEvent & EV_RXFLAG) //æ¥æ”¶åˆ°äº‹ä»¶å­—ç¬¦ï¼Œå¹¶ç½®äºè¾“å…¥ç¼“å†²åŒºä¸­ 
 					::SendMessage(port->m_pOwner->m_hWnd, WM_COMM_RXFLAG_DETECTED, (WPARAM) 0, (LPARAM) port->m_nPortNr);
-				if (CommEvent & EV_BREAK)  //ÊäÈëÖĞ·¢ÉúÖĞ¶Ï
+				if (CommEvent & EV_BREAK)  //è¾“å…¥ä¸­å‘ç”Ÿä¸­æ–­
 					::SendMessage(port->m_pOwner->m_hWnd, WM_COMM_BREAK_DETECTED, (WPARAM) 0, (LPARAM) port->m_nPortNr);
-				if (CommEvent & EV_ERR) //·¢ÉúÏßÂ·×´Ì¬´íÎó£¬ÏßÂ·×´Ì¬´íÎó°üÀ¨CE_FRAME,CE_OVERRUNºÍCE_RXPARITY 
+				if (CommEvent & EV_ERR) //å‘ç”Ÿçº¿è·¯çŠ¶æ€é”™è¯¯ï¼Œçº¿è·¯çŠ¶æ€é”™è¯¯åŒ…æ‹¬CE_FRAME,CE_OVERRUNå’ŒCE_RXPARITY 
 					::SendMessage(port->m_pOwner->m_hWnd, WM_COMM_ERR_DETECTED, (WPARAM) 0, (LPARAM) port->m_nPortNr);
-				if (CommEvent & EV_RING) //¼ì²âµ½ÕñÁåÖ¸Ê¾
+				if (CommEvent & EV_RING) //æ£€æµ‹åˆ°æŒ¯é“ƒæŒ‡ç¤º
 					::SendMessage(port->m_pOwner->m_hWnd, WM_COMM_RING_DETECTED, (WPARAM) 0, (LPARAM) port->m_nPortNr);
 					
 				break;
 			}  
-		case 1: // write event ·¢ËÍÊı¾İ
+		case 1: // write event å‘é€æ•°æ®
 			{
 				// Write character event from port
 				WriteChar(port);
@@ -512,7 +512,7 @@ DWORD WINAPI CSerialPort::CommThread(LPVOID pParam)
 			}
 		default:
 			{
-				AfxMessageBox("½ÓÊÕÓĞÎÊÌâ!");
+				AfxMessageBox("æ¥æ”¶æœ‰é—®é¢˜!");
 				break;
 			}
 
@@ -525,7 +525,7 @@ DWORD WINAPI CSerialPort::CommThread(LPVOID pParam)
 
 //
 // start comm watching
-///¿ªÆô¼àÊÓÏß³Ì
+///å¼€å¯ç›‘è§†çº¿ç¨‹
 //
 BOOL CSerialPort::StartMonitoring()
 {
@@ -538,7 +538,7 @@ BOOL CSerialPort::StartMonitoring()
 
 //
 // Restart the comm thread
-///¸´Î»¼àÊÓÏß³Ì
+///å¤ä½ç›‘è§†çº¿ç¨‹
 //
 BOOL CSerialPort::RestartMonitoring()
 {
@@ -551,7 +551,7 @@ BOOL CSerialPort::RestartMonitoring()
 
 //
 // Suspend the comm thread
-///¹ÒÆğ¼àÊÓÏß³Ì
+///æŒ‚èµ·ç›‘è§†çº¿ç¨‹
 //
 BOOL CSerialPort::StopMonitoring()
 {
@@ -564,7 +564,7 @@ BOOL CSerialPort::StopMonitoring()
 
 //
 // If there is a error, give the right message
-///Èç¹ûÓĞ´íÎó£¬¸ø³öÌáÊ¾
+///å¦‚æœæœ‰é”™è¯¯ï¼Œç»™å‡ºæç¤º
 //
 void CSerialPort::ProcessErrorMessage(char* ErrorText)
 {
@@ -686,7 +686,7 @@ void CSerialPort::ReceiveChar(CSerialPort* port)
 
 	for (;;) 
 	{ 
-		//add by liquanhai 2011-11-06  ·ÀÖ¹ËÀËø
+		//add by liquanhai 2011-11-06  é˜²æ­¢æ­»é”
 		if(WaitForSingleObject(port->m_hShutdownEvent,0)==WAIT_OBJECT_0)
 			return;
 
@@ -698,7 +698,7 @@ void CSerialPort::ReceiveChar(CSerialPort* port)
 
 		// ClearCommError() will update the COMSTAT structure and
 		// clear any other errors.
-		///¸üĞÂCOMSTAT
+		///æ›´æ–°COMSTAT
 		
 		bResult = ClearCommError(port->m_hComm, &dwError, &comstat);
 
@@ -714,7 +714,7 @@ void CSerialPort::ReceiveChar(CSerialPort* port)
 		// as it is in my production code, but I have found this 
 		// solutiion to be the most efficient way to do this.
 		
-		///ËùÓĞ×Ö·û¾ù±»¶Á³ö£¬ÖĞ¶ÏÑ­»·
+		///æ‰€æœ‰å­—ç¬¦å‡è¢«è¯»å‡ºï¼Œä¸­æ–­å¾ªç¯
 		if (comstat.cbInQue == 0)
 		{
 			// break out when all bytes have been read
@@ -725,14 +725,14 @@ void CSerialPort::ReceiveChar(CSerialPort* port)
 
 		if (bRead)
 		{
-			///´®¿Ú¶Á³ö£¬¶Á³ö»º³åÇøÖĞ×Ö½Ú
+			///ä¸²å£è¯»å‡ºï¼Œè¯»å‡ºç¼“å†²åŒºä¸­å­—èŠ‚
 			bResult = ReadFile(port->m_hComm,		// Handle to COMM port 
 							   &RXBuff,				// RX Buffer Pointer
 							   1,					// Read one byte
 							   &BytesRead,			// Stores number of bytes read
 							   &port->m_ov);		// pointer to the m_ov structure
 			// deal with the error code 
-			///Èô·µ»Ø´íÎó£¬´íÎó´¦Àí
+			///è‹¥è¿”å›é”™è¯¯ï¼Œé”™è¯¯å¤„ç†
 			if (!bResult)  
 			{ 
 				switch (dwError = GetLastError()) 
@@ -741,7 +741,7 @@ void CSerialPort::ReceiveChar(CSerialPort* port)
 						{ 
 							// asynchronous i/o is still in progress 
 							// Proceed on to GetOverlappedResults();
-							///Òì²½IOÈÔÔÚ½øĞĞ
+							///å¼‚æ­¥IOä»åœ¨è¿›è¡Œ
 							bRead = FALSE;
 							break;
 						}
@@ -750,18 +750,18 @@ void CSerialPort::ReceiveChar(CSerialPort* port)
 							// Another error has occured.  Process this error.
 							port->ProcessErrorMessage("ReadFile()");
 							break;
-							//return;///·ÀÖ¹¶ÁĞ´Êı¾İÊ±£¬´®¿Ú·ÇÕı³£¶Ï¿ªµ¼ÖÂËÀÑ­»·Ò»Ö±Ö´ĞĞ¡£add by itas109 2014-01-09 ÓëÉÏÃæliquanhaiÌí¼Ó·ÀËÀËøµÄ´úÂë²î²»¶à
+							//return;///é˜²æ­¢è¯»å†™æ•°æ®æ—¶ï¼Œä¸²å£éæ­£å¸¸æ–­å¼€å¯¼è‡´æ­»å¾ªç¯ä¸€ç›´æ‰§è¡Œã€‚add by itas109 2014-01-09 ä¸ä¸Šé¢liquanhaiæ·»åŠ é˜²æ­»é”çš„ä»£ç å·®ä¸å¤š
 						} 
 				}
 			}
-			else///ReadFile·µ»ØTRUE
+			else///ReadFileè¿”å›TRUE
 			{
 				// ReadFile() returned complete. It is not necessary to call GetOverlappedResults()
 				bRead = TRUE;
 			}
 		}  // close if (bRead)
 
-		///Òì²½IO²Ù×÷ÈÔÔÚ½øĞĞ£¬ĞèÒªµ÷ÓÃGetOverlappedResult²éÑ¯
+		///å¼‚æ­¥IOæ“ä½œä»åœ¨è¿›è¡Œï¼Œéœ€è¦è°ƒç”¨GetOverlappedResultæŸ¥è¯¢
 		if (!bRead)
 		{
 			bRead = TRUE;
@@ -792,7 +792,7 @@ void CSerialPort::WriteToPort(char* string)
 {		
 	assert(m_hComm != 0);
 
-	memset(m_szWriteBuffer, 0, sizeof(m_szWriteBuffer));
+	memset(m_szWriteBuffer, 0, sizeof(m_szWriteBuffer[0]) * m_nWriteBufferSize);
 	strcpy(m_szWriteBuffer, string);
 	m_nWriteSize=strlen(string); // add by mrlong
 	// set event for write
@@ -831,7 +831,7 @@ BOOL CSerialPort::IsOpen()
 void CSerialPort::ClosePort()
 {
 	MSG message;
-	//add by liquanhai  ·ÀÖ¹ËÀËø  2011-11-06
+	//add by liquanhai  é˜²æ­¢æ­»é”  2011-11-06
 	do
 	{
 		SetEvent(m_hShutdownEvent);
@@ -869,7 +869,7 @@ void CSerialPort::ClosePort()
 void CSerialPort::WriteToPort(char* string,int n)
 {
 	assert(m_hComm != 0);
-	memset(m_szWriteBuffer, 0, sizeof(m_szWriteBuffer));
+	memset(m_szWriteBuffer, 0, sizeof(m_szWriteBuffer[0]) * m_nWriteBufferSize);
 	memcpy(m_szWriteBuffer, string, n);
 	m_nWriteSize = n;
 
@@ -880,7 +880,7 @@ void CSerialPort::WriteToPort(char* string,int n)
 void CSerialPort::WriteToPort(LPCTSTR string)
 {
 	assert(m_hComm != 0);
-	memset(m_szWriteBuffer, 0, sizeof(m_szWriteBuffer));
+	memset(m_szWriteBuffer, 0, sizeof(m_szWriteBuffer[0]) * m_nWriteBufferSize);
 	strcpy(m_szWriteBuffer, string);
 	m_nWriteSize=strlen(string);
 	// set event for write
@@ -890,7 +890,7 @@ void CSerialPort::WriteToPort(LPCTSTR string)
 void CSerialPort::WriteToPort(BYTE* Buffer, int n)
 {
 	assert(m_hComm != 0);
-	memset(m_szWriteBuffer, 0, sizeof(m_szWriteBuffer));
+	memset(m_szWriteBuffer, 0, sizeof(m_szWriteBuffer[0]) * m_nWriteBufferSize);
 	int i;
 	for(i=0; i<n; i++)
 	{
@@ -906,7 +906,7 @@ void CSerialPort::WriteToPort(BYTE* Buffer, int n)
 void CSerialPort::SendData(LPCTSTR lpszData, const int nLength)
 {
 	assert(m_hComm != 0);
-	memset(m_szWriteBuffer, 0, nLength);
+	memset(m_szWriteBuffer, 0, sizeof(m_szWriteBuffer[0]) * m_nWriteBufferSize);
 	strcpy(m_szWriteBuffer, lpszData);
 	m_nWriteSize=nLength;
 	// set event for write
@@ -916,7 +916,7 @@ void CSerialPort::SendData(LPCTSTR lpszData, const int nLength)
 BOOL CSerialPort::RecvData(LPTSTR lpszData, const int nSize)
 {
 	//
-	//½ÓÊÕÊı¾İ
+	//æ¥æ”¶æ•°æ®
 	//
 	assert(m_hComm!=0);
 	memset(lpszData,0,nSize);
@@ -933,8 +933,8 @@ BOOL CSerialPort::RecvData(LPTSTR lpszData, const int nSize)
 	return TRUE;
 }
 //
-///²éÑ¯×¢²á±íµÄ´®¿ÚºÅ£¬½«Öµ´æÓÚÊı×éÖĞ
-///±¾´úÂë²Î¿¼ÓÚmingojiangµÄ»ñÈ¡´®¿ÚÂß¼­Ãû´úÂë
+///æŸ¥è¯¢æ³¨å†Œè¡¨çš„ä¸²å£å·ï¼Œå°†å€¼å­˜äºæ•°ç»„ä¸­
+///æœ¬ä»£ç å‚è€ƒäºmingojiangçš„è·å–ä¸²å£é€»è¾‘åä»£ç 
 //
 void CSerialPort::QueryKey(HKEY hKey) 
 { 
@@ -973,7 +973,7 @@ void CSerialPort::QueryKey(HKEY hKey)
 		&cbSecurityDescriptor,   // security descriptor 
 		&ftLastWriteTime);       // last write time 
 	
-	for (i=0;i<20;i++)///´æ·Å´®¿ÚºÅµÄÊı×é³õÊ¼»¯
+	for (i=0;i<20;i++)///å­˜æ”¾ä¸²å£å·çš„æ•°ç»„åˆå§‹åŒ–
 	{
 		m_nComArray[i] = -1;
 	}
@@ -1001,7 +1001,7 @@ void CSerialPort::QueryKey(HKEY hKey)
 		}
 	}
 	else{
-		AfxMessageBox(_T("±¾»úÃ»ÓĞ´®¿Ú....."));
+		AfxMessageBox(_T("æœ¬æœºæ²¡æœ‰ä¸²å£....."));
 	}
 	
 }
@@ -1011,21 +1011,21 @@ void CSerialPort::Hkey2ComboBox(CComboBox& m_PortNO)
 	HKEY hTestKey;
 	bool Flag = FALSE;
 	
-	///½öÊÇXPÏµÍ³µÄ×¢²á±íÎ»ÖÃ£¬ÆäËûÏµÍ³¸ù¾İÊµ¼ÊÇé¿ö×öĞŞ¸Ä
+	///ä»…æ˜¯XPç³»ç»Ÿçš„æ³¨å†Œè¡¨ä½ç½®ï¼Œå…¶ä»–ç³»ç»Ÿæ ¹æ®å®é™…æƒ…å†µåšä¿®æ”¹
 	if(ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE, TEXT("HARDWARE\\DEVICEMAP\\SERIALCOMM"), 0, KEY_READ, &hTestKey) ){
 		QueryKey(hTestKey);
 	}
 	RegCloseKey(hTestKey);
 	
 	int i = 0;
-	m_PortNO.ResetContent();///Ë¢ĞÂÊ±£¬Çå¿ÕÏÂÀ­ÁĞ±íÄÚÈİ
+	m_PortNO.ResetContent();///åˆ·æ–°æ—¶ï¼Œæ¸…ç©ºä¸‹æ‹‰åˆ—è¡¨å†…å®¹
 	while(i < MaxSerialPortNum && -1 != m_nComArray[i]){
 		CString szCom; 
 		szCom.Format(_T("COM%d"), m_nComArray[i]);
 		m_PortNO.InsertString(i, szCom.GetBuffer(5));
 		++i;
 		Flag = TRUE;
-		if (Flag)///°ÑµÚÒ»¸ö·¢ÏÖµÄ´®¿ÚÉèÎªÏÂÀ­ÁĞ±íµÄÄ¬ÈÏÖµ
+		if (Flag)///æŠŠç¬¬ä¸€ä¸ªå‘ç°çš„ä¸²å£è®¾ä¸ºä¸‹æ‹‰åˆ—è¡¨çš„é»˜è®¤å€¼
 			m_PortNO.SetCurSel(0);
 	}
 	
